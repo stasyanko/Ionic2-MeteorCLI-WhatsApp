@@ -25,3 +25,5 @@ dispatch:mocha-phantomjs
 shell-server
 mys:fonts
 check
+accounts-base
+mys:accounts-phone
