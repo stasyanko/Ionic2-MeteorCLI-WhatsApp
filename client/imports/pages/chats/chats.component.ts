@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import template from "./chats.component.html"
 import {Observable} from "rxjs";
+import {Meteor} from 'meteor/meteor';
 import {Chat} from "../../../../both/models/chat.model";
 import * as moment from "moment";
 import style from "./chats.component.scss";
@@ -21,6 +22,7 @@ import {NewChatComponent} from './new-chat.component';
 })
 export class ChatsComponent implements OnInit {
   chats: Observable<Chat[]>;
+  senderId: string;
 
   constructor(
     private navCtrl: NavController,
@@ -29,6 +31,7 @@ export class ChatsComponent implements OnInit {
     ) {}
 
   ngOnInit() {
+    this.senderId = Meteor.userId();
     this.chats = Chats
       .find({})
       .mergeMap<Chat[]>(chats =>
@@ -44,7 +47,20 @@ export class ChatsComponent implements OnInit {
 
           )
         )
-      ).zone();
+      ).map(chats => {
+        chats.forEach(chat => {
+          chat.title = '';
+          chat.picture = '';
+
+          const receiver = Meteor.users.findOne(chat.memberIds.find(memberId => memberId !== this.senderId));
+          if (!receiver) return;
+
+          chat.title = receiver.profile.name;
+          chat.picture = receiver.profile.picture;
+        });
+
+        return chats;
+      }).zone();
   }
 
   removeChat(chat: Chat): void {
