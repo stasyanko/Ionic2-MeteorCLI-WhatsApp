@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import template from "./chats.component.html"
 import {Observable} from "rxjs";
 import {Meteor} from 'meteor/meteor';
+import {MeteorObservable} from 'meteor-rxjs';
 import {Chat} from "../../../../both/models/chat.model";
 import * as moment from "moment";
 import style from "./chats.component.scss";
@@ -33,35 +34,40 @@ export class ChatsComponent implements OnInit {
 
   ngOnInit() {
     this.senderId = Meteor.userId();
-    this.chats = Chats
-      .find({})
-      .mergeMap<Chat[]>(chats =>
-        Observable.combineLatest(
-          ...chats.map(chat =>
 
-            Messages.find({ chatId: chat._id }, { sort: { createdAt: -1 }, limit: 1 })
-              .startWith(null)
-              .map(messages => {
-                if (messages) chat.lastMessage = messages[0];
-                return chat;
-              })
+    MeteorObservable.subscribe('chats').subscribe(() => {
+      MeteorObservable.autorun().subscribe(() => {
+        this.chats = Chats
+          .find({})
+          .mergeMap<Chat[]>(chats =>
+            Observable.combineLatest(
+              ...chats.map(chat =>
 
-          )
-        )
-      ).map(chats => {
-        chats.forEach(chat => {
-          chat.title = '';
-          chat.picture = '';
+                Messages.find({ chatId: chat._id }, { sort: { createdAt: -1 }, limit: 1 })
+                  .startWith(null)
+                  .map(messages => {
+                    if (messages) chat.lastMessage = messages[0];
+                    return chat;
+                  })
 
-          const receiver = Meteor.users.findOne(chat.memberIds.find(memberId => memberId !== this.senderId));
-          if (!receiver) return;
+              )
+            )
+          ).map(chats => {
+            chats.forEach(chat => {
+              chat.title = '';
+              chat.picture = '';
 
-          chat.title = receiver.profile.name;
-          chat.picture = receiver.profile.picture;
-        });
+              const receiver = Meteor.users.findOne(chat.memberIds.find(memberId => memberId !== this.senderId));
+              if (!receiver) return;
 
-        return chats;
-      }).zone();
+              chat.title = receiver.profile.name;
+              chat.picture = receiver.profile.picture;
+            });
+
+            return chats;
+          }).zone();
+      });
+    });
   }
 
   removeChat(chat: Chat): void {
