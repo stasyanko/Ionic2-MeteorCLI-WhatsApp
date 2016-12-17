@@ -65,4 +65,8 @@ export class ChatsComponent {
       }
     ])
   }
+
+  removeChat(chat: Chat): void {
+    // TODO: Implement it later
+  }
 }
