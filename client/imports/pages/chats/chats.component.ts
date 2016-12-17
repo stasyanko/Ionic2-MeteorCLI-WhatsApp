@@ -8,7 +8,7 @@ import style from "./chats.component.scss";
 import {Chats} from "../../../../both/collections/chats.collection";
 import {Message} from "../../../../both/models/message.model";
 import {Messages} from "../../../../both/collections/messages.collection";
-import {NavController, PopoverController, ModalController} from "ionic-angular";
+import {NavController, PopoverController, ModalController, AlertController} from "ionic-angular";
 import {MessagesPage} from "../chat/messages-page.component";
 import {ChatsOptionsComponent} from '../chats/chats-options.component';
 import {NewChatComponent} from './new-chat.component';
@@ -27,7 +27,8 @@ export class ChatsComponent implements OnInit {
   constructor(
     private navCtrl: NavController,
     private popoverCtrl: PopoverController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController
     ) {}
 
   ngOnInit() {
@@ -64,7 +65,14 @@ export class ChatsComponent implements OnInit {
   }
 
   removeChat(chat: Chat): void {
-    // TODO: Implement it later
+    MeteorObservable.call('removeChat', chat._id).subscribe({
+      complete: () => {
+        this.chats = this.chats.zone();
+      },
+      error: (e: Error) => {
+        if (e) this.handleError(e);
+      }
+    });
   }
 
   addChat(): void {
@@ -82,5 +90,17 @@ export class ChatsComponent implements OnInit {
 
   showMessages(chat): void {
     this.navCtrl.push(MessagesPage, {chat});
+  }
+
+  private handleError(e: Error): void {
+    console.error(e);
+
+    const alert = this.alertCtrl.create({
+      title: 'Oops!',
+      message: e.message,
+      buttons: ['OK']
+    });
+
+    alert.present();
   }
 }
