@@ -1,0 +1,17 @@
+{
+  "map": {
+    "node_modules/ionicons/dist/fonts/ionicons.ttf": "fonts/ionicons.ttf",
+    "node_modules/ionicons/dist/fonts/ionicons.woff": "fonts/ionicons.woff",
+    "node_modules/ionicons/dist/fonts/ionicons.woff2": "fonts/ionicons.woff2",
+    "node_modules/ionicons/dist/fonts/noto-sans-bold.ttf": "fonts/noto-sans-bold.ttf",
+    "node_modules/ionicons/dist/fonts/noto-sans-regular.ttf": "fonts/noto-sans-regular.ttf",
+    "node_modules/ionicons/dist/fonts/roboto-bold.ttf": "fonts/roboto-bold.ttf",
+    "node_modules/ionicons/dist/fonts/roboto-bold.woff": "fonts/roboto-bold.woff",
+    "node_modules/ionicons/dist/fonts/roboto-light.ttf": "fonts/roboto-light.ttf",
+    "node_modules/ionicons/dist/fonts/roboto-light.woff": "fonts/roboto-light.woff",
+    "node_modules/ionicons/dist/fonts/roboto-medium.ttf": "fonts/roboto-medium.ttf",
+    "node_modules/ionicons/dist/fonts/roboto-medium.woff": "fonts/roboto-medium.woff",
+    "node_modules/ionicons/dist/fonts/roboto-regular.ttf": "fonts/roboto-regular.ttf",
+    "node_modules/ionicons/dist/fonts/roboto-regular.woff": "fonts/roboto-regular.woff"
+  }
+}
